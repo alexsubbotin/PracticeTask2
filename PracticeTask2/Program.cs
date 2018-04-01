@@ -68,9 +68,13 @@ namespace PracticeTask2
                                 }
                                 else
                                 {
-                                    index = 0;
-                                    if (i != 0 && i != buf.Length - 1)
-                                        i--;
+                                    if (index != 0)
+                                    {
+
+                                        index = 0;
+                                        if (i != 0 && i != buf.Length - 1)
+                                            i--;
+                                    }
                                 }
                             }
                             else
@@ -87,7 +91,8 @@ namespace PracticeTask2
                                         outputText += outputStrArr[j] + "#";
                                 }
                                 index = 0;
-                                i--;
+                                if (i != 0 && i != buf.Length - 1)
+                                    i--;
                                 //break;
                             }
                         }
@@ -124,11 +129,11 @@ namespace PracticeTask2
                 if (outputText[i] != '#')
                     Console.Write(outputText[i]);
                 else
-                    if(i != outputText.Length - 1)
+                    if (i != outputText.Length - 1)
                     Console.WriteLine();
             }
 
-            //Console.ReadLine();
+            Console.ReadLine();
         }
 
         // Function to compare input strings with the wanted ones (even with letters of different cases)
