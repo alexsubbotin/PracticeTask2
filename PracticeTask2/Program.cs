@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+//using System.Collections.Generic;
+//using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+//using System.Threading.Tasks;
 
 namespace PracticeTask2
 {
@@ -16,67 +16,109 @@ namespace PracticeTask2
 
 
             // Creating the array of input strings.
-            string text = "";
-            string inputString;
-            do
-            {
-                inputString = Console.ReadLine();
-                if (inputString != "")
-                    text += inputString + "+";
-            } while (inputString != "");
-
-            text = text.Remove(text.Length - 1, 1);
-            string[] inpStr = text.Split('+');
-
-            // Creating a jagged array of ALL words where i - string, j - word.
-            string[][] jagArrWords = new string[inpStr.Length][];
+            string outputText = "";
+            string input1 = "";
+            string input2 = "";
 
             // Variables that indicate whether the wanted were founf or not.
             bool w1 = false;
             bool w2 = false;
+
             // Indexes where "@" should be inserted.
             int I = -1;
-            int J = -1;
+            //int J = -1;
 
-            for (int i = 0; i < jagArrWords.Length; i++)
+            bool endOfInput = false;
+
+            do
             {
-                jagArrWords[i] = CreateArrayOfWords(inpStr[i]);
+                if (input1 == "")
+                    input1 = Console.ReadLine();
 
-                for (int j = 0; j < jagArrWords[i].Length; j++)
+                string[] buf1 = new string[0];
+
+                if (input1 != "")
                 {
-                    if (jagArrWords[i][j] != " " && jagArrWords[i][j] != ((char)9).ToString())
-                    {
-                        if (!w1)
-                        {
-                            w1 = CompareStrings(jagArrWords[i][j], wordComb[0]);
-                            I = i;
-                            J = j;
-                        }
-                        else
-                        {
-                            w2 = CompareStrings(jagArrWords[i][j], wordComb[1]);
+                    buf1 = CreateArrayOfWords(input1);
 
-                            if (!w2)
+                    for (int i = 0; i < buf1.Length; i++)
+                    {
+                        if (buf1[i] != " " && buf1[i] != ((char)9).ToString())
+                        {
+                            if (!w1)
                             {
-                                w1 = false;
-                                w2 = false;
-                                //I = -1;
-                                //J = -1;
+                                w1 = CompareStrings(buf1[i], wordComb[0]);
+                                I = i;
                             }
                             else
                             {
-                                jagArrWords[I][J] = "@" + jagArrWords[I][J];
+                                w2 = CompareStrings(buf1[i], wordComb[1]);
+
+                                if (!w2)
+                                {
+                                    w1 = false;
+                                }
+                                else
+                                {
+                                    buf1[I] = "@" + buf1[I];
+                                    input1 = String.Concat(buf1);
+                                    //outputText += input1 + "#";
+                                    w1 = false;
+                                    w2 = false;
+                                }
                             }
                         }
                     }
                 }
-            }
+                else
+                {
+                    endOfInput = true;
+                }
 
-            for (int i = 0; i < jagArrWords.Length; i++)
+                if (w1)
+                {
+                    input2 = Console.ReadLine();
+
+                    if(input2 != "")
+                    {
+                        string[] buf2 = CreateArrayOfWords(input2);
+
+                        w2 = CompareStrings(buf2[0], wordComb[1]);
+
+                        if (w2)
+                        {
+                            buf1[I] = "@" + buf1[I];
+                            input1 = String.Concat(buf1);
+                            outputText += input1 + "#";
+                            //outputText += input2 + "#";
+                            w1 = false;
+                            w2 = false;
+                        }
+                        else
+                        {
+                            w1 = false;
+                        }
+
+                        input1 = input2;
+                    }
+                    else
+                    {
+                        endOfInput = true;
+                    }
+                }
+                else
+                {
+                    outputText += input1 + "#";
+                    input1 = "";
+                }
+            } while (!endOfInput);
+
+            for(int i = 0; i < outputText.Length; i++)
             {
-                for (int j = 0; j < jagArrWords[i].Length; j++)
-                    Console.Write(jagArrWords[i][j]);
-                Console.WriteLine();
+                if (outputText[i] != '#')
+                    Console.Write(outputText[i]);
+                else
+                    Console.WriteLine();
             }
 
             Console.ReadLine();
