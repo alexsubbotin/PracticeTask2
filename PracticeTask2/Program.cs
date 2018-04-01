@@ -83,7 +83,17 @@ namespace PracticeTask2
                     {
                         string[] buf2 = CreateArrayOfWords(input2);
 
-                        w2 = CompareStrings(buf2[0], wordComb[1]);
+                        int index2 = -1;
+                        for(int i = 0; i < buf2.Length; i++)
+                        {
+                            if (buf2[i] != " " && buf2[i] != ((char)9).ToString() && buf2[i] != "")
+                            {
+                                index2 = i;
+                                break;
+                            }
+                        }
+
+                        w2 = CompareStrings(buf2[index2], wordComb[1]);
 
                         if (w2)
                         {
