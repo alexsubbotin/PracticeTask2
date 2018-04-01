@@ -15,123 +15,120 @@ namespace PracticeTask2
             string[] wordComb = comb.Split(' ');
 
 
-            // Creating the array of input strings.
+            // Output text
             string outputText = "";
-            string input1 = "";
-            string input2 = "";
+            // Input text is read by 1-2 lines at a time.
+            string input = "";
+            //string input2 = "";
 
-            // Variables that indicate whether the wanted were founf or not.
-            bool w1 = false;
-            bool w2 = false;
+            // Variables that indicate whether the wanted were found or not.
+            //bool w1 = false;
+            //bool w2 = false;
 
             // Indexes where "@" should be inserted.
             int I = -1;
-            //int J = -1;
 
             bool endOfInput = false;
 
+
+            int index = 0;
+            string backup = "";
+            int numOfCurrStr = -1;
+            int numOfStr = -1;
+            int numOfWord = -1;
+
             do
             {
-                if (input1 == "")
-                    input1 = Console.ReadLine();
-
-                string[] buf1 = new string[0];
-
-                if (input1 != "")
+                input = Console.ReadLine();
+                if (input != "")
                 {
-                    buf1 = CreateArrayOfWords(input1);
+                    outputText += input + "#";
 
-                    for (int i = 0; i < buf1.Length; i++)
+                    numOfCurrStr++;
+
+                    string[] buf = CreateArrayOfWords(input);
+
+                    for (int i = 0; i < buf.Length; i++)
                     {
-                        if (buf1[i] != " " && buf1[i] != ((char)9).ToString())
-                        {
-                            if (!w1)
-                            {
-                                w1 = CompareStrings(buf1[i], wordComb[0]);
-                                I = i;
-                            }
-                            else
-                            {
-                                w2 = CompareStrings(buf1[i], wordComb[1]);
 
-                                if (!w2)
+                        if (buf[i] != " " && buf[i] != ((char)9).ToString() && buf[i] != "")
+                        {
+                            if (index < wordComb.Length)
+                            {
+                                if (CompareStrings(buf[i], wordComb[index]))
                                 {
-                                    w1 = false;
+                                    if (index == 0)
+                                    {
+                                        backup = "@" + buf[i];
+                                        numOfStr = numOfCurrStr;
+                                        numOfWord = i;
+                                    }
+
+                                    index++;
                                 }
                                 else
                                 {
-                                    buf1[I] = "@" + buf1[I];
-                                    input1 = String.Concat(buf1);
-                                    //outputText += input1 + "#";
-                                    w1 = false;
-                                    w2 = false;
+                                    index = 0;
+                                    if (i != 0 && i != buf.Length - 1)
+                                        i--;
                                 }
                             }
-                        }
-                    }
-                }
-                else
-                {
-                    endOfInput = true;
-                }
-
-                if (w1)
-                {
-                    input2 = Console.ReadLine();
-
-                    if(input2 != "")
-                    {
-                        string[] buf2 = CreateArrayOfWords(input2);
-
-                        int index2 = -1;
-                        for(int i = 0; i < buf2.Length; i++)
-                        {
-                            if (buf2[i] != " " && buf2[i] != ((char)9).ToString() && buf2[i] != "")
+                            else
                             {
-                                index2 = i;
-                                break;
+                                //outputText += input + "#";
+                                string[] outputStrArr = outputText.Split('#');
+                                string[] strWordArr = CreateArrayOfWords(outputStrArr[numOfStr]);
+                                strWordArr[numOfWord] = backup;
+                                outputStrArr[numOfStr] = String.Concat(strWordArr);
+                                outputText = "";
+                                for (int j = 0; j < outputStrArr.Length; j++)
+                                {
+                                    if (outputStrArr[j] != "")
+                                        outputText += outputStrArr[j] + "#";
+                                }
+                                index = 0;
+                                i--;
+                                //break;
                             }
                         }
-
-                        w2 = CompareStrings(buf2[index2], wordComb[1]);
-
-                        if (w2)
-                        {
-                            buf1[I] = "@" + buf1[I];
-                            input1 = String.Concat(buf1);
-                            outputText += input1 + "#";
-                            //outputText += input2 + "#";
-                            w1 = false;
-                            w2 = false;
-                        }
-                        else
-                        {
-                            w1 = false;
-                        }
-
-                        input1 = input2;
                     }
-                    else
+
+
+                    if (index == wordComb.Length)
                     {
-                        endOfInput = true;
+                        // outputText += input + "#";
+
+                        string[] outputStrArr = outputText.Split('#');
+                        string[] strWordArr = CreateArrayOfWords(outputStrArr[numOfStr]);
+                        strWordArr[numOfWord] = backup;
+                        outputStrArr[numOfStr] = String.Concat(strWordArr);
+                        outputText = "";
+                        for (int j = 0; j < outputStrArr.Length; j++)
+                        {
+                            if (outputStrArr[j] != "")
+                                outputText += outputStrArr[j] + "#";
+                        }
+                        index = 0;
                     }
+                    //else
+                    //    outputText += input + "#";
                 }
                 else
-                {
-                    outputText += input1 + "#";
-                    input1 = "";
-                }
-            } while (!endOfInput);
+                    endOfInput = true;
 
-            for(int i = 0; i < outputText.Length; i++)
+            } while (endOfInput != true);
+
+
+            for (int i = 0; i < outputText.Length; i++)
             {
                 if (outputText[i] != '#')
                     Console.Write(outputText[i]);
                 else
+                    if(i != outputText.Length - 1)
                     Console.WriteLine();
             }
 
-            Console.ReadLine();
+            //Console.ReadLine();
         }
 
         // Function to compare input strings with the wanted ones (even with letters of different cases)
