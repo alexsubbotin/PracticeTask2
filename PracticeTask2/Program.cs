@@ -8,115 +8,103 @@ namespace PracticeTask2
 {
     class Program
     {
+        // Task: search for a word-combination in an input text. Highlight it with "@" symbol and return the original text.
+        // Student: Alexey Subbotin. Group: SE-17-1.
         static void Main(string[] args)
         {
             // Getting the wanted word combination.
             string comb = Console.ReadLine();
             string[] wordComb = comb.Split(' ');
 
-
             // Output text
             string outputText = "";
             // Input text is read by 1-2 lines at a time.
             string input = "";
-            //string input2 = "";
 
-            // Variables that indicate whether the wanted were found or not.
-            //bool w1 = false;
-            //bool w2 = false;
-
-            // Indexes where "@" should be inserted.
-            int I = -1;
-
+            // Indicates the end of input.
             bool endOfInput = false;
 
-
+            // Indicates what word of the word combination is being checked.
             int index = 0;
+
+            // Stores the word with "@".
             string backup = "";
+
+            // Number of the string that is being checked.
             int numOfCurrStr = -1;
+
+            // Indexes where "@" should be inserted.
             int numOfStr = -1;
             int numOfWord = -1;
 
+            // Do while it's not the end of input.
             do
             {
+                // Getting the string.
                 input = Console.ReadLine();
+
+                // If it's empty that means it's then end of input.
                 if (input != "")
                 {
+                    // Adding the string to the text.
                     outputText += input + "#";
 
+                    // Definition of the current string number.
                     numOfCurrStr++;
 
+                    // Creating an array of the string words.
                     string[] buf = CreateArrayOfWords(input);
 
+                    // Going through all the words.
                     for (int i = 0; i < buf.Length; i++)
                     {
-
+                        // If it's not a symbol-separator or empty.
                         if (buf[i] != " " && buf[i] != ((char)9).ToString() && buf[i] != "")
                         {
-                            if (index < wordComb.Length)
+                            // Comparing string current word with the word combination current word.
+                            if (CompareStrings(buf[i], wordComb[index]))
                             {
-                                if (CompareStrings(buf[i], wordComb[index]))
+                                // If it's the 1st word of the word combination there should be "@".
+                                // Store the updated word and its "coordinates".
+                                if (index == 0)
                                 {
-                                    if (index == 0)
-                                    {
-                                        backup = "@" + buf[i];
-                                        numOfStr = numOfCurrStr;
-                                        numOfWord = i;
-                                    }
-
-                                    index++;
+                                    backup = "@" + buf[i];
+                                    numOfStr = numOfCurrStr;
+                                    numOfWord = i;
                                 }
-                                else
-                                {
-                                    if (index != 0)
-                                    {
 
-                                        index = 0;
-                                        if (i != 0 && i != buf.Length - 1)
-                                            i--;
-                                    }
-                                }
+                                // Going to the next word of the word combination.
+                                index++;
                             }
                             else
                             {
-                                //outputText += input + "#";
-                                string[] outputStrArr = outputText.Split('#');
-                                string[] strWordArr = CreateArrayOfWords(outputStrArr[numOfStr]);
-                                strWordArr[numOfWord] = backup;
-                                outputStrArr[numOfStr] = String.Concat(strWordArr);
-                                outputText = "";
-                                for (int j = 0; j < outputStrArr.Length; j++)
+                                // If they are not equal that means it should start over again (index = 0).
+                                if (index != 0)
                                 {
-                                    if (outputStrArr[j] != "")
-                                        outputText += outputStrArr[j] + "#";
+                                    index = 0;
+                                    // Maybe the word equals the 1st word of the combination.
+                                    if (i != 0 && i != buf.Length - 1)
+                                        i--;
                                 }
-                                index = 0;
-                                if (i != 0 && i != buf.Length - 1)
-                                    i--;
-                                //break;
+                            }
+                        }
+                        else
+                        {
+                            // If all of the words are found.
+                            if (index == wordComb.Length)
+                            {
+                                // Adding "@".
+                                Add(ref outputText, ref index, numOfStr, numOfWord, backup);
                             }
                         }
                     }
 
-
+                    // If all of the words are found (the end of the string).
                     if (index == wordComb.Length)
                     {
-                        // outputText += input + "#";
-
-                        string[] outputStrArr = outputText.Split('#');
-                        string[] strWordArr = CreateArrayOfWords(outputStrArr[numOfStr]);
-                        strWordArr[numOfWord] = backup;
-                        outputStrArr[numOfStr] = String.Concat(strWordArr);
-                        outputText = "";
-                        for (int j = 0; j < outputStrArr.Length; j++)
-                        {
-                            if (outputStrArr[j] != "")
-                                outputText += outputStrArr[j] + "#";
-                        }
-                        index = 0;
+                        // Adding "@".
+                        Add(ref outputText, ref index, numOfStr, numOfWord, backup);
                     }
-                    //else
-                    //    outputText += input + "#";
                 }
                 else
                     endOfInput = true;
@@ -124,6 +112,7 @@ namespace PracticeTask2
             } while (endOfInput != true);
 
 
+            // Printing the output text.
             for (int i = 0; i < outputText.Length; i++)
             {
                 if (outputText[i] != '#')
@@ -134,6 +123,31 @@ namespace PracticeTask2
             }
 
             Console.ReadLine();
+        }
+
+        // Function to add "@".
+        public static void Add(ref string outputText, ref int index, int numOfStr, int numOfWord, string backup)
+        {
+            // Getting the strings of the output text.
+            string[] outputStrArr = outputText.Split('#');
+
+            // Getting the words of the needed string.
+            string[] strWordArr = CreateArrayOfWords(outputStrArr[numOfStr]);
+
+            // Inserting "@".
+            strWordArr[numOfWord] = backup;
+
+            // Building everything back.
+            outputStrArr[numOfStr] = String.Concat(strWordArr);
+            outputText = "";
+            for (int j = 0; j < outputStrArr.Length; j++)
+            {
+                if (outputStrArr[j] != "")
+                    outputText += outputStrArr[j] + "#";
+            }
+
+            // Starting all over again.
+            index = 0;
         }
 
         // Function to compare input strings with the wanted ones (even with letters of different cases)
