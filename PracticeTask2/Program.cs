@@ -3,6 +3,7 @@
 //using System.Linq;
 using System.Text;
 //using System.Threading.Tasks;
+using System.IO;
 
 namespace PracticeTask2
 {
@@ -13,10 +14,12 @@ namespace PracticeTask2
         static void Main(string[] args)
         {
             // Getting the wanted word combination.
-            string comb = Console.ReadLine();
+            StreamReader sr = new StreamReader("INPUT.txt");
+            string comb = sr.ReadLine();
+            //string comb = Console.ReadLine();
             string[] wordComb = comb.Split(' ');
 
-            // Output text
+            // Output text.
             string outputText = "";
             // Input text is read by 1-2 lines at a time.
             string input = "";
@@ -41,10 +44,11 @@ namespace PracticeTask2
             do
             {
                 // Getting the string.
-                input = Console.ReadLine();
+                input = sr.ReadLine();
+                //input = Console.ReadLine();
 
                 // If it's empty that means it's then end of input.
-                if (input != "")
+                if (input != null)
                 {
                     // Adding the string to the text.
                     outputText += input + "#";
@@ -110,19 +114,23 @@ namespace PracticeTask2
                     endOfInput = true;
 
             } while (endOfInput != true);
-
+            sr.Close();
 
             // Printing the output text.
+            StreamWriter sw = new StreamWriter("OUTPUT.txt");
             for (int i = 0; i < outputText.Length; i++)
             {
                 if (outputText[i] != '#')
-                    Console.Write(outputText[i]);
+                    sw.Write(outputText[i]);
+                //Console.Write(outputText[i]);
                 else
                     if (i != outputText.Length - 1)
-                    Console.WriteLine();
+                        sw.WriteLine();
+                //Console.WriteLine();
             }
+            sw.Close();
 
-            Console.ReadLine();
+            //Console.ReadLine();
         }
 
         // Function to add "@".
