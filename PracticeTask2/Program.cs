@@ -3,7 +3,7 @@ using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
 //using System.Threading.Tasks;
-//using System.IO;
+using System.IO;
 
 namespace PracticeTask2
 {
@@ -13,26 +13,17 @@ namespace PracticeTask2
         // Student: Alexey Subbotin. Group: SE-17-1.
         static void Main(string[] args)
         {
-            //StreamReader sr = new StreamReader("input.txt");
+            StreamReader sr = new StreamReader("input.txt");
 
             // Request.
-            //string requestStr = sr.ReadLine();
-            string requestStr = Console.ReadLine();
+            string requestStr = sr.ReadLine();
             List<char> request = new List<char>(requestStr);
 
             // The text.
-            //string textStr = sr.ReadToEnd();
-            string textStr = "";
-            string buf = Console.ReadLine();
-            while(buf != "")
-            {
-                textStr += "\r\n" + buf;
-                buf = Console.ReadLine();
-            }
-            textStr = textStr.Substring(2, textStr.Length - 2);
+            string textStr = sr.ReadToEnd();
             List<char> text = new List<char>(textStr.ToCharArray());
 
-            //sr.Close();
+            sr.Close();
 
             // Compressed text.
             List<char> compressed = new List<char>();
@@ -95,26 +86,16 @@ namespace PracticeTask2
                 }
             }
 
-            // Writing the new text.
-            //StreamWriter sw = new StreamWriter("output.txt");
-            //for (int i = 0; i < text.Count; i++)
-            //{
-            //    if (match[i])
-            //        sw.Write("@");
-            //    sw.Write(text[i]);
-
-            //}
-            //sw.Close();
-
+            //Writing the new text.
+            StreamWriter sw = new StreamWriter("output.txt");
             for (int i = 0; i < text.Count; i++)
             {
                 if (match[i])
-                    Console.Write("@");
-                Console.Write(text[i]);
+                    sw.Write("@");
+                sw.Write(text[i]);
 
             }
-
-            //Console.ReadLine();
+            sw.Close();
         }
     }
 }
